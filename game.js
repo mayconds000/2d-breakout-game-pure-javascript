@@ -11,6 +11,38 @@ var paddleWidth = 75;
 var paddleX = (canvas.width-paddleWidth)/2;
 var rightPressed = false;
 var leftPressed = false;
+var brick = {
+  rowCount: 3,
+  columnCount: 5,
+  width: 75,
+  height: 20,
+  padding: 10,
+  offsetTop: 30,
+  offsetLeft: 30
+}
+var bricks = [];
+for(let c=0; c<brick.columnCount; c++){
+  bricks[c] = [];
+  for(let r=0; r<brick.rowCount; r++){
+    bricks[c][r] = {x: 0, y: 0};
+  }
+}
+
+function drawBricks(){
+  for(let c=0; c < brick.columnCount; c++) {
+    for(let r=0; r < brick.rowCount; r++) {
+      let brickX = (c*(brick.width+brick.padding))+brick.offsetLeft;
+      let brickY = (c*(brick.height+brick.padding))+brick.offsetTop;
+      bricks[c][r].x = brickX;
+      bricks[c][r].y = brickY;
+      ctx.beginPath();
+      ctx.rect(brickX, brickY, brick.width, brick.height);
+      ctx.fillStyle = "#0095DD";
+      ctx.fill();
+      ctx.closePath();
+    }
+  }
+}
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHendler, false);
@@ -51,6 +83,7 @@ function draw(){
   ctx.clearRect(0,0, canvas.width, canvas.height);
   drawBall();
   drawPaddle();
+  drawBricks();
   x += dx;
   y += dy;
 
