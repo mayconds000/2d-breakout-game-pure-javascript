@@ -11,6 +11,7 @@ var paddleWidth = 75;
 var paddleX = (canvas.width-paddleWidth)/2;
 var rightPressed = false;
 var leftPressed = false;
+var score = 0;
 var brick = {
   rowCount: 3,
   columnCount: 5,
@@ -90,16 +91,28 @@ function collisionDetection(){
         if(x > b.x && x < b.x + brick.width && y > b.y && y < b.y+brick.height){
           dy = -dy;
           b.status = 0;
+          score+=1;
+          if(score == brick.rowCount*brick.columnCount){
+            alert("YOU WIN, CONGRATULATIONS!");
+            document.location.reload();
+          }
         }
       }
     }
   }
 }
 
+function drawScore(){
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: "+score, 8, 20);
+}
+
 function draw(){
   ctx.clearRect(0,0, canvas.width, canvas.height);
   drawBall();
   drawPaddle();
+  drawScore();
   drawBricks();
   collisionDetection();
   x += dx;
