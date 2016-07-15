@@ -24,22 +24,24 @@ var bricks = [];
 for(let c=0; c<brick.columnCount; c++){
   bricks[c] = [];
   for(let r=0; r<brick.rowCount; r++){
-    bricks[c][r] = {x: 0, y: 0};
+    bricks[c][r] = {x: 0, y: 0, status: 1};
   }
 }
 
 function drawBricks(){
   for(let c=0; c < brick.columnCount; c++) {
     for(let r=0; r < brick.rowCount; r++) {
-      let brickX = (c*(brick.width+brick.padding))+brick.offsetLeft;
-      let brickY = (c*(brick.height+brick.padding))+brick.offsetTop;
-      bricks[c][r].x = brickX;
-      bricks[c][r].y = brickY;
-      ctx.beginPath();
-      ctx.rect(brickX, brickY, brick.width, brick.height);
-      ctx.fillStyle = "#0095DD";
-      ctx.fill();
-      ctx.closePath();
+      if(bricks[c][r].status == 1){
+        let brickX = (c*(brick.width+brick.padding))+brick.offsetLeft;
+        let brickY = (c*(brick.height+brick.padding))+brick.offsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brick.width, brick.height);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+      }
     }
   }
 }
@@ -79,11 +81,27 @@ function drawPaddle(){
   ctx.closePath();
 }
 
+function collisionDetection(){
+
+  for(let c=0; c < brick.columnCount; c++){
+    for(let r=0; r < brick.rowCount; r++){
+      var b = bricks[c][r];
+      if(b.status == 1){
+        if(x > b.x && x < b.x + brick.width && y > b.y && y < b.y+brick.height){
+          dy = -dy;
+          b.status = 0;
+        }
+      }
+    }
+  }
+}
+
 function draw(){
   ctx.clearRect(0,0, canvas.width, canvas.height);
   drawBall();
   drawPaddle();
   drawBricks();
+  collisionDetection();
   x += dx;
   y += dy;
 
@@ -103,7 +121,6 @@ function draw(){
 
   if(rightPressed && paddleX < canvas.width - paddleWidth) paddleX += 7;
   else if(leftPressed && paddleX > 0) paddleX -= 7;
-
 
 }
 
